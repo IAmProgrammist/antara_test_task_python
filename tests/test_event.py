@@ -2,17 +2,40 @@ import datetime
 
 import pytest
 
+import json
+
 from eventssorter.event import Event, EventType
 
 
 def test_time():
     event = Event()
+
+    current_date = datetime.datetime.fromisoformat('2019-01-04T16:41:24+02:00')
+    event.time = current_date
+    assert event.time == current_date
+
     current_date = datetime.datetime.now()
+    event.time = current_date
+    assert event.time == current_date
+
+    current_date = datetime.datetime.fromisoformat('2019-01-04T16:41:24-02:00')
     event.time = current_date
     assert event.time == current_date
 
     with pytest.raises(ValueError):
         event.time = "Hello World!"
+
+
+def test_time_utc():
+    event = Event()
+
+    current_date = datetime.datetime.fromisoformat('2019-01-04T16:41:24+02:00')
+    event.time = current_date
+    assert event.time_utc() == datetime.datetime.fromisoformat('2019-01-04T14:41:24+00:00')
+
+    current_date = datetime.datetime.fromisoformat('2019-01-04T16:41:24-02:00')
+    event.time = current_date
+    assert event.time_utc() == datetime.datetime.fromisoformat('2019-01-04T18:41:24+00:00')
 
 
 def test_type():
@@ -50,3 +73,18 @@ def test_participants():
 
     with pytest.raises(ValueError):
         event.participants = {"Alexander", "Ivan", 42}
+
+
+def test_address():
+    event = Event()
+    current_address = "Party!"
+    event.address = current_address
+    assert event.address == current_address
+
+    with pytest.raises(ValueError):
+        event.address = 42
+
+
+def test_json_source():
+    pass
+    # event = Event(json.loads('{}"))
