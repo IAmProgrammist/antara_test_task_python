@@ -17,7 +17,7 @@ class Event:
             participants = set()
         if json_source:
             self.time = datetime.datetime.fromisoformat(json_source["time"])
-            self.type = json_source["type"]
+            self.type = EventType(json_source["type"])
             self.name = json_source["name"]
             self.participants = json_source["participants"]
             self.address = json_source["address"]
@@ -77,8 +77,8 @@ class Event:
 
     @participants.setter
     def participants(self, v):
-        if isinstance(v, set) and all(isinstance(participant, str) for participant in v):
-            self.__participants = v
+        if hasattr(v, "__iter__") and all(isinstance(participant, str) for participant in v):
+            self.__participants = list(v)
         else:
             raise ValueError
 

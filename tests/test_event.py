@@ -64,7 +64,7 @@ def test_name():
 
 def test_participants():
     event = Event()
-    current_participants = {"Alexander", "Ivan", "Robert"}
+    current_participants = ["Alexander", "Ivan", "Robert"]
     event.participants = current_participants
     assert event.participants == current_participants
 
@@ -77,7 +77,7 @@ def test_participants():
 
 def test_address():
     event = Event()
-    current_address = "Party!"
+    current_address = "telegram"
     event.address = current_address
     assert event.address == current_address
 
@@ -86,5 +86,15 @@ def test_address():
 
 
 def test_json_source():
-    pass
-    # event = Event(json.loads('{}"))
+    event = Event(json.loads('{\
+  "time": "2019-01-04T16:41:24+02:00",\
+  "type": "other",\
+  "name": "Party",\
+  "participants": ["Alexander", "Ivan", "Robert"],\
+  "address": "telegram"\
+}'))
+    assert event.time == datetime.datetime.fromisoformat('2019-01-04T16:41:24+02:00')
+    assert event.type == EventType.OTHER
+    assert event.name == "Party"
+    assert event.participants == ["Alexander", "Ivan", "Robert"]
+    assert event.address == "telegram"
