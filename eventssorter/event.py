@@ -10,7 +10,12 @@ class EventType(str, Enum):
 
 
 class Event:
-    max_name_len = 100
+    MAX_NAME_LEN = 100
+    _JSON_SCHEME_NAME_TIME = "time"
+    _JSON_SCHEME_NAME_TYPE = "type"
+    _JSON_SCHEME_NAME_NAME = "name"
+    _JSON_SCHEME_NAME_PARTICIPANTS = "participants"
+    _JSON_SCHEME_NAME_ADDRESS = "address"
 
     def __init__(self, json_source=None, time=datetime.datetime.now(datetime.timezone.utc),
                  event_type=EventType.PRIVATE,
@@ -18,11 +23,11 @@ class Event:
         if participants is None:
             participants = set()
         if json_source:
-            self.time = datetime.datetime.fromisoformat(json_source["time"])
-            self.type = EventType(json_source["type"])
-            self.name = json_source["name"]
-            self.participants = json_source["participants"]
-            self.address = json_source["address"]
+            self.time = datetime.datetime.fromisoformat(json_source[Event._JSON_SCHEME_NAME_TIME])
+            self.type = EventType(json_source[Event._JSON_SCHEME_NAME_TYPE])
+            self.name = json_source[Event._JSON_SCHEME_NAME_NAME]
+            self.participants = json_source[Event._JSON_SCHEME_NAME_PARTICIPANTS]
+            self.address = json_source[Event._JSON_SCHEME_NAME_ADDRESS]
         else:
             self.time = time
             self.type = event_type
@@ -68,7 +73,7 @@ class Event:
 
     @name.setter
     def name(self, v: str):
-        if isinstance(v, str) and len(v) <= Event.max_name_len:
+        if isinstance(v, str) and len(v) <= Event.MAX_NAME_LEN:
             self.__name = v
         else:
             raise ValueError
@@ -94,3 +99,14 @@ class Event:
             self.__address = v
         else:
             raise ValueError
+
+    def to_dict(self):
+        result = dict()
+
+        result[Event._JSON_SCHEME_NAME_TIME] = self.time.isoformat()
+        result[Event._JSON_SCHEME_NAME_TYPE] = self.type
+        result[Event._JSON_SCHEME_NAME_NAME] = self.name
+        result[Event._JSON_SCHEME_NAME_PARTICIPANTS] = self.participants
+        result[Event._JSON_SCHEME_NAME_ADDRESS] = self.address
+
+        return result

@@ -4,9 +4,9 @@ import random
 
 
 class EventFabric:
-    participants = ["Mary Williams", "Timothy Smith", "Debra Thompson", "Brandy Murray", "Hazel Edwards",
-                    "Laura Allen", "Larry Townsend", "Mary Snyder", "Lawrence Jones", "Teresa Williamson"]
-    max_word_len = 20
+    __PARTICIPANTS = ["Mary Williams", "Timothy Smith", "Debra Thompson", "Brandy Murray", "Hazel Edwards",
+                      "Laura Allen", "Larry Townsend", "Mary Snyder", "Lawrence Jones", "Teresa Williamson"]
+    __MAX_WORD_LEN = 20
 
     @staticmethod
     def generate_events(amount=1, begin_date=datetime.datetime(2024, 1, 1), end_date=datetime.datetime(2030, 1, 1)):
@@ -27,17 +27,17 @@ class EventFabric:
         event_type = random.choice(list(EventType))
 
         name = ""
-        name_len = random.randint(1, Event.max_name_len)
-        word_len = random.randint(1, EventFabric.max_word_len)
+        name_len = random.randint(1, Event.MAX_NAME_LEN)
+        word_len = random.randint(1, EventFabric.__MAX_WORD_LEN)
         while len(name) < name_len:
             if word_len > 0:
                 name += random.choice("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
                 word_len -= 1
             else:
                 name += " "
-                word_len = random.randint(1, EventFabric.max_word_len)
+                word_len = random.randint(1, EventFabric.__MAX_WORD_LEN)
 
-        participants = random.choices(EventFabric.participants, k=random.randint(2, len(EventFabric.participants)))
+        participants = random.choices(EventFabric.__PARTICIPANTS, k=random.randint(2, len(EventFabric.__PARTICIPANTS)))
 
         address = "".join(random.choices("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", k=20))
 

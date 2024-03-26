@@ -7,6 +7,7 @@ import json
 from eventssorter.event import Event, EventType
 
 
+
 def test_time():
     event = Event()
 
