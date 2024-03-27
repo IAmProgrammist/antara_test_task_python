@@ -16,9 +16,8 @@ class EventFabric:
 
         time_delta = (end_date - begin_date) * random.random()
         time = begin_date + time_delta
-        random_offset = int(24 * random.random()) * 60
-        random_offset = random_offset - (random_offset % 30) - 12 * 60
-        time -= datetime.timedelta(minutes=random_offset)
+        random_offset = int(24 * random.random() * 2) * 30 - 12 * 60
+        time += datetime.timedelta(minutes=random_offset)
         return time.replace(tzinfo=datetime.timezone(datetime.timedelta(minutes=random_offset)))
 
     @staticmethod

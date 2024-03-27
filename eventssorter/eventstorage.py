@@ -1,6 +1,6 @@
 import datetime
 import json
-from event import EventType, Event
+from eventssorter.event import EventType, Event
 
 
 class EventStorage:
@@ -11,12 +11,7 @@ class EventStorage:
         if source is None:
             source = {EventStorage.__SCHEME_NAME_EVENT: []}
 
-        self.events = [Event(time=datetime.datetime.fromisoformat(event[Event.SCHEME_NAME_TIME]),
-                             event_type=EventType(event[Event.SCHEME_NAME_TYPE]),
-                             name=event[Event.SCHEME_NAME_NAME],
-                             participants=event[Event.SCHEME_NAME_PARTICIPANTS],
-                             address=event[Event.SCHEME_NAME_ADDRESS])
-                       for event in source[EventStorage.__SCHEME_NAME_EVENT]]
+        self.events = [Event.from_dict(event) for event in source[EventStorage.__SCHEME_NAME_EVENT]]
 
     @classmethod
     def load_from_json(cls, data):

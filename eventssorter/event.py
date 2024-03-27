@@ -11,11 +11,11 @@ class EventType(str, Enum):
 
 class Event:
     MAX_NAME_LEN = 100
-    SCHEME_NAME_TIME = "time"
-    SCHEME_NAME_TYPE = "type"
-    SCHEME_NAME_NAME = "name"
-    SCHEME_NAME_PARTICIPANTS = "participants"
-    SCHEME_NAME_ADDRESS = "address"
+    __SCHEME_NAME_TIME = "time"
+    __SCHEME_NAME_TYPE = "type"
+    __SCHEME_NAME_NAME = "name"
+    __SCHEME_NAME_PARTICIPANTS = "participants"
+    __SCHEME_NAME_ADDRESS = "address"
 
     def __init__(self, time=datetime.datetime.now(datetime.timezone.utc),
                  event_type=EventType.PRIVATE,
@@ -34,19 +34,13 @@ class Event:
 
     @property
     def time(self) -> datetime.datetime:
-        result = self.__time_utc
-        if self.__time_tzinfo:
-            result += self.__time_tzinfo.utcoffset(None)
-
-        return result.replace(tzinfo=self.__time_tzinfo)
+        return datetime.datetime.fromtimestamp(self.__time_utc.timestamp(), tz=self.__time_tzinfo)
 
     @time.setter
     def time(self, v: datetime.datetime):
         if isinstance(v, datetime.datetime):
             self.__time_tzinfo = v.tzinfo
-            self.__time_utc = v.replace(tzinfo=datetime.timezone.utc)
-            if self.__time_tzinfo:
-                self.__time_utc -= self.__time_tzinfo.utcoffset(None)
+            self.__time_utc = datetime.datetime.fromtimestamp(v.timestamp(), tz=datetime.timezone.utc)
         else:
             raise ValueError
 
@@ -97,10 +91,18 @@ class Event:
     def to_dict(self):
         result = dict()
 
-        result[Event.SCHEME_NAME_TIME] = self.time.isoformat()
-        result[Event.SCHEME_NAME_TYPE] = self.type
-        result[Event.SCHEME_NAME_NAME] = self.name
-        result[Event.SCHEME_NAME_PARTICIPANTS] = self.participants
-        result[Event.SCHEME_NAME_ADDRESS] = self.address
+        result[Event.__SCHEME_NAME_TIME] = self.time.isoformat()
+        result[Event.__SCHEME_NAME_TYPE] = self.type.value
+        result[Event.__SCHEME_NAME_NAME] = self.name
+        result[Event.__SCHEME_NAME_PARTICIPANTS] = self.participants
+        result[Event.__SCHEME_NAME_ADDRESS] = self.address
 
         return result
+
+    @classmethod
+    def from_dict(cls, source):
+        return cls(time=datetime.datetime.fromisoformat(source[Event.__SCHEME_NAME_TIME]),
+                   event_type=EventType(source[Event.__SCHEME_NAME_TYPE]),
+                   name=source[Event.__SCHEME_NAME_NAME],
+                   participants=source[Event.__SCHEME_NAME_PARTICIPANTS],
+                   address=source[Event.__SCHEME_NAME_ADDRESS])

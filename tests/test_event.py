@@ -73,7 +73,7 @@ def test_name(valid_event_data, invalid_event_data):
 def test_to_dict(valid_event_data):
     expected = {
         "time": valid_event_data[0].isoformat(),
-        "type": valid_event_data[1],
+        "type": valid_event_data[1].value,
         "name": valid_event_data[4],
         "participants": valid_event_data[2],
         "address": valid_event_data[3]
@@ -84,3 +84,19 @@ def test_to_dict(valid_event_data):
                    address=valid_event_data[3]).to_dict()
 
     assert expected == actual
+
+
+def test_from_dict(valid_event_data):
+    event = Event.from_dict({
+        "time": valid_event_data[0].isoformat(),
+        "type": valid_event_data[1].value,
+        "name": valid_event_data[4],
+        "participants": valid_event_data[2],
+        "address": valid_event_data[3]
+    })
+
+    assert event.time == valid_event_data[0]
+    assert event.type == valid_event_data[1]
+    assert event.name == valid_event_data[4]
+    assert event.participants == valid_event_data[2]
+    assert event.address == valid_event_data[3]
