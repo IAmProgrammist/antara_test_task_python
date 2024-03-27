@@ -1,7 +1,7 @@
 import datetime
 import pytest
-from eventssorter.eventfabric import EventFabric
-from eventssorter.event import EventType
+from groupevents.eventfabric import EventFabric
+from groupevents.event import EventType
 
 
 @pytest.fixture(scope="session")

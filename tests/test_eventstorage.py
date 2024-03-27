@@ -1,7 +1,7 @@
 import json
 
 import pytest
-from eventssorter.eventstorage import EventStorage
+from groupevents.eventstorage import EventStorage
 
 
 def test_load_dump_dict(valid_events_storage):

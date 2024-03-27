@@ -1,6 +1,6 @@
 import datetime
 import pytest
-from eventssorter.event import Event, EventType
+from groupevents.event import Event, EventType
 
 
 def test_time(valid_event_data, invalid_event_data):

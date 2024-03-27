@@ -1,7 +1,7 @@
 import datetime
 import random
 
-from eventssorter.event import EventType, Event
+from groupevents.event import EventType, Event
 
 
 class EventFabric:
