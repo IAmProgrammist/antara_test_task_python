@@ -11,29 +11,23 @@ class EventType(str, Enum):
 
 class Event:
     MAX_NAME_LEN = 100
-    _JSON_SCHEME_NAME_TIME = "time"
-    _JSON_SCHEME_NAME_TYPE = "type"
-    _JSON_SCHEME_NAME_NAME = "name"
-    _JSON_SCHEME_NAME_PARTICIPANTS = "participants"
-    _JSON_SCHEME_NAME_ADDRESS = "address"
+    SCHEME_NAME_TIME = "time"
+    SCHEME_NAME_TYPE = "type"
+    SCHEME_NAME_NAME = "name"
+    SCHEME_NAME_PARTICIPANTS = "participants"
+    SCHEME_NAME_ADDRESS = "address"
 
-    def __init__(self, json_source=None, time=datetime.datetime.now(datetime.timezone.utc),
+    def __init__(self, time=datetime.datetime.now(datetime.timezone.utc),
                  event_type=EventType.PRIVATE,
                  name="", participants=None, address=""):
         if participants is None:
             participants = set()
-        if json_source:
-            self.time = datetime.datetime.fromisoformat(json_source[Event._JSON_SCHEME_NAME_TIME])
-            self.type = EventType(json_source[Event._JSON_SCHEME_NAME_TYPE])
-            self.name = json_source[Event._JSON_SCHEME_NAME_NAME]
-            self.participants = json_source[Event._JSON_SCHEME_NAME_PARTICIPANTS]
-            self.address = json_source[Event._JSON_SCHEME_NAME_ADDRESS]
-        else:
-            self.time = time
-            self.type = event_type
-            self.name = name
-            self.participants = participants
-            self.address = address
+
+        self.time = time
+        self.type = event_type
+        self.name = name
+        self.participants = participants
+        self.address = address
 
     def time_utc(self):
         return self.__time_utc
@@ -103,10 +97,10 @@ class Event:
     def to_dict(self):
         result = dict()
 
-        result[Event._JSON_SCHEME_NAME_TIME] = self.time.isoformat()
-        result[Event._JSON_SCHEME_NAME_TYPE] = self.type
-        result[Event._JSON_SCHEME_NAME_NAME] = self.name
-        result[Event._JSON_SCHEME_NAME_PARTICIPANTS] = self.participants
-        result[Event._JSON_SCHEME_NAME_ADDRESS] = self.address
+        result[Event.SCHEME_NAME_TIME] = self.time.isoformat()
+        result[Event.SCHEME_NAME_TYPE] = self.type
+        result[Event.SCHEME_NAME_NAME] = self.name
+        result[Event.SCHEME_NAME_PARTICIPANTS] = self.participants
+        result[Event.SCHEME_NAME_ADDRESS] = self.address
 
         return result

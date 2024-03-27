@@ -1,101 +1,86 @@
 import datetime
-
 import pytest
-
-import json
-
 from eventssorter.event import Event, EventType
 
 
-
-def test_time():
+def test_time(valid_event_data, invalid_event_data):
     event = Event()
 
-    current_date = datetime.datetime.fromisoformat('2019-01-04T16:41:24+02:00')
+    current_date = valid_event_data[0]
     event.time = current_date
     assert event.time == current_date
 
-    current_date = datetime.datetime.now()
-    event.time = current_date
-    assert event.time == current_date
-
-    current_date = datetime.datetime.fromisoformat('2019-01-04T16:41:24-02:00')
-    event.time = current_date
-    assert event.time == current_date
-
-    with pytest.raises(ValueError):
-        event.time = "Hello World!"
+    for invalid_data in invalid_event_data[0]:
+        with pytest.raises(ValueError):
+            event.time = invalid_data
 
 
-def test_time_utc():
+def test_time_utc(valid_event_data):
     event = Event()
 
-    current_date = datetime.datetime.fromisoformat('2019-01-04T16:41:24+02:00')
-    event.time = current_date
-    assert event.time_utc() == datetime.datetime.fromisoformat('2019-01-04T14:41:24+00:00')
-
-    current_date = datetime.datetime.fromisoformat('2019-01-04T16:41:24-02:00')
-    event.time = current_date
-    assert event.time_utc() == datetime.datetime.fromisoformat('2019-01-04T18:41:24+00:00')
+    event.time = valid_event_data[0]
+    assert event.time_utc() == datetime.datetime.fromtimestamp(valid_event_data[0].timestamp(), datetime.timezone.utc)
 
 
-def test_type():
+def test_type(valid_event_data, invalid_event_data):
     event = Event()
-    current_type = EventType("private")
+
+    current_type = valid_event_data[1]
     event.type = current_type
     assert event.type == current_type
 
-    with pytest.raises(ValueError):
-        event.type = 42
+    for invalid_data in invalid_event_data[1]:
+        with pytest.raises(ValueError):
+            event.type = invalid_data
 
 
-def test_name():
+def test_participants(valid_event_data, invalid_event_data):
     event = Event()
-    current_name = "Party!"
-    event.name = current_name
-    assert event.name == current_name
 
-    with pytest.raises(ValueError):
-        event.name = 42
-
-    with pytest.raises(ValueError):
-        event.name = "A veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery" \
-                     " long party!"
-
-
-def test_participants():
-    event = Event()
-    current_participants = ["Alexander", "Ivan", "Robert"]
+    current_participants = valid_event_data[2]
     event.participants = current_participants
     assert event.participants == current_participants
 
-    with pytest.raises(ValueError):
-        event.participants = 42
-
-    with pytest.raises(ValueError):
-        event.participants = {"Alexander", "Ivan", 42}
+    for invalid_data in invalid_event_data[2]:
+        with pytest.raises(ValueError):
+            event.participants = invalid_data
 
 
-def test_address():
+def test_address(valid_event_data, invalid_event_data):
     event = Event()
-    current_address = "telegram"
+
+    current_address = valid_event_data[3]
     event.address = current_address
     assert event.address == current_address
 
-    with pytest.raises(ValueError):
-        event.address = 42
+    for invalid_data in invalid_event_data[3]:
+        with pytest.raises(ValueError):
+            event.address = invalid_data
 
 
-def test_json_source():
-    event = Event(json.loads('{\
-  "time": "2019-01-04T16:41:24+02:00",\
-  "type": "other",\
-  "name": "Party",\
-  "participants": ["Alexander", "Ivan", "Robert"],\
-  "address": "telegram"\
-}'))
-    assert event.time == datetime.datetime.fromisoformat('2019-01-04T16:41:24+02:00')
-    assert event.type == EventType.OTHER
-    assert event.name == "Party"
-    assert event.participants == ["Alexander", "Ivan", "Robert"]
-    assert event.address == "telegram"
+def test_name(valid_event_data, invalid_event_data):
+    event = Event()
+
+    current_name = valid_event_data[4]
+    event.name = current_name
+    assert event.name == current_name
+
+    for invalid_data in invalid_event_data[4]:
+        with pytest.raises(ValueError):
+            event.name = invalid_data
+
+
+def test_to_dict(valid_event_data):
+    expected = {
+        "time": valid_event_data[0].isoformat(),
+        "type": valid_event_data[1],
+        "name": valid_event_data[4],
+        "participants": valid_event_data[2],
+        "address": valid_event_data[3]
+    }
+
+    actual = Event(time=valid_event_data[0], event_type=valid_event_data[1],
+                   name=valid_event_data[4], participants=valid_event_data[2],
+                   address=valid_event_data[3]).to_dict()
+
+    assert expected == actual
