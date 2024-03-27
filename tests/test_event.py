@@ -3,6 +3,7 @@ import pytest
 from groupevents.event import Event, EventType
 
 
+@pytest.mark.event_test_time
 def test_time(valid_event_data, invalid_event_data):
     event = Event()
 
@@ -15,6 +16,7 @@ def test_time(valid_event_data, invalid_event_data):
             event.time = invalid_data
 
 
+@pytest.mark.event_test_time_utc
 def test_time_utc(valid_event_data):
     event = Event()
 
@@ -22,6 +24,7 @@ def test_time_utc(valid_event_data):
     assert event.time_utc() == datetime.datetime.fromtimestamp(valid_event_data[0].timestamp(), datetime.timezone.utc)
 
 
+@pytest.mark.event_test_type
 def test_type(valid_event_data, invalid_event_data):
     event = Event()
 
@@ -34,6 +37,7 @@ def test_type(valid_event_data, invalid_event_data):
             event.type = invalid_data
 
 
+@pytest.mark.event_test_participants
 def test_participants(valid_event_data, invalid_event_data):
     event = Event()
 
@@ -46,6 +50,7 @@ def test_participants(valid_event_data, invalid_event_data):
             event.participants = invalid_data
 
 
+@pytest.mark.event_test_address
 def test_address(valid_event_data, invalid_event_data):
     event = Event()
 
@@ -58,6 +63,7 @@ def test_address(valid_event_data, invalid_event_data):
             event.address = invalid_data
 
 
+@pytest.mark.event_test_name
 def test_name(valid_event_data, invalid_event_data):
     event = Event()
 
@@ -70,6 +76,7 @@ def test_name(valid_event_data, invalid_event_data):
             event.name = invalid_data
 
 
+@pytest.mark.event_test_to_dict
 def test_to_dict(valid_event_data):
     expected = {
         "time": valid_event_data[0].isoformat(),
@@ -86,6 +93,7 @@ def test_to_dict(valid_event_data):
     assert expected == actual
 
 
+@pytest.mark.event_test_from_dict
 def test_from_dict(valid_event_data):
     event = Event.from_dict({
         "time": valid_event_data[0].isoformat(),
