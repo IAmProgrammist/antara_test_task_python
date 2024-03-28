@@ -1,0 +1,7 @@
+colorama==0.4.6
+iniconfig==2.0.0
+packaging==24.0
+pluggy==1.4.0
+Pygments==2.16.1
+pytest==8.1.1
+websockets==11.0.3
